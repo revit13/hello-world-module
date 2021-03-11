@@ -63,8 +63,7 @@ make helm-uninstall
 
 2. Deploy `M4DModule` in `m4d-system` namespace:
 ```bash
-oc project m4d-system
-oc create -f hello-world-module.yaml
+kubectl create -f hello-world-module.yaml -n m4d-system
 ```
 3. In `m4dapplication.yaml`:
     * Change `metadata.name` to your application name.
@@ -76,23 +75,21 @@ oc create -f hello-world-module.yaml
     ```
 4.  Deploy `M4DApplication` in `default` namespace:
 ```bash
-oc project default
-oc create -f m4dapplication.yaml
+kubectl create -f m4dapplication.yaml -n default
 ```
 5.  Check if `M4DApplication` successfully deployed:
 ```bash
-oc describe M4DApplication hello-world-module-test
+kubectl describe M4DApplication hello-world-module-test -n default
 ```
 
 6.  Check if module was triggered in `m4d-blueprints`:
 ```bash
-oc project m4d-blueprints
-oc get job
-oc get pods
+kubectl get job -n m4d-blueprints
+kubectl get pods -n m4d-blueprints
 ```
-If you are using the `hello-world-module` image, you should see this in the `oc logs` of your completed Pod:
+If you are using the `hello-world-module` image, you should see this in the `kubectl logs` of your completed Pod:
 ```
-$ oc logs rel1-hello-world-module-z9vnl
+$ kubectl logs rel1-hello-world-module-z9vnl -n m4d-blueprints
 
 Hello World Module!
 

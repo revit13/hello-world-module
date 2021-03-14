@@ -25,7 +25,11 @@ copy:
         endpoint: s3.eu-gb.cloud-object-storage.appdomain.cloud
         object_key: car.data.parq
       type: 2
-      credentialLocation: /v1/m4d/dataset-creds/m4d-test-bucket
+      vault:
+        address: http://vault.m4d-system:8200/
+        authPath: v1/auth/authpath/login
+        role: module
+        secretPath: v1/m4d/dataset-creds/%7B%22asset_id%22:%20%225067b64a-67bc-4067-9117-0aff0a9963ea%22%2C%20%22catalog_id%22:%20%220fd6ff25-7327-4b55-8ff2-56cc1c934824%22%7D
       format: parquet
 
   # Copy destination
@@ -37,8 +41,13 @@ copy:
         endpoint: s3.eu-gb.cloud-object-storage.appdomain.cloud
         object_key: car.data.parq
       type: 2
-      credentialLocation: /v1/m4d/dataset-creds/m4d-test-bucket
+      vault:
+        address: http://vault.m4d-system:8200/
+        authPath: v1/auth/authpath/login
+        role: module
+        secretPath: v1/m4d/dataset-creds/%7B%22asset_id%22:%20%225067b64a-67bc-4067-9117-0aff0a9963ea%22%2C%20%22catalog_id%22:%20%220fd6ff25-7327-4b55-8ff2-56cc1c934824%22%7D
       format: csv
+
 
 nameOverride: ""
 fullnameOverride: ""

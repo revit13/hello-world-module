@@ -12,9 +12,9 @@ spec:
   data:
     - dataSetID: "{\"ServerName\":\"mds1\",\"AssetGuid\":\"ASSET_ID\"}" 
       requirements: 
-      copy:
-        catalog: {}
-        required: true
-      interface:
-        dataformat: parquet
-        protocol: s3
+        copy:
+          catalog: {}
+          required: true
+        interface:
+          dataformat: parquet
+          protocol: s3

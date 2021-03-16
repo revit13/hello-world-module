@@ -89,7 +89,7 @@ kubectl get pods -n m4d-blueprints
 ```
 If you are using the `hello-world-module` image, you should see this in the `kubectl logs` of your completed Pod:
 ```
-$ kubectl logs rel1-hello-world-module-z9vnl -n m4d-blueprints
+$ kubectl logs rel1-hello-world-module-x2tgs
 
 Hello World Module!
 
@@ -97,7 +97,11 @@ Connection name is s3
 
 Connection format is parquet
 
-Connection credential location is /v1/m4d/dataset-creds/m4d-test-bucket
+Vault credential address is http://vault.m4d-system:8200/
+
+Vault credential role is module
+
+Vault credential secret path is v1/m4d/dataset-creds/%7B%22asset_id%22:%20%225067b64a-67bc-4067-9117-0aff0a9963ea%22%2C%20%22catalog_id%22:%20%220fd6ff25-7327-4b55-8ff2-56cc1c934824%22%7D
 
 S3 bucket is m4d-test-bucket
 

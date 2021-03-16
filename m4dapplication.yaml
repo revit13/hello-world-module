@@ -10,10 +10,11 @@ spec:
     purpose: Fraud Detection
     role: Data Owner
   data:
-    - dataSetID: "{\"ServerName\":\"cocoMDS3\",\"AssetGuid\":\"ASSET_ID\"}" 
-      requirements:
-        copy:
-          required: true
-        interface:
-          protocol: m4d-arrow-flight
-          dataformat: parquet
+    - dataSetID: "{\"ServerName\":\"mds1\",\"AssetGuid\":\"ASSET_ID\"}" 
+      requirements: 
+      copy:
+        catalog: {}
+        required: true
+      interface:
+        dataformat: parquet
+        protocol: s3

@@ -16,5 +16,5 @@ spec:
           catalog: {}
           required: true
         interface:
-          dataformat: parquet
+          dataformat: csv
           protocol: s3

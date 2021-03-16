@@ -14,7 +14,7 @@ def main():
             if "data" in key:
                 data = val[0]
                 connectionName = data["connection.name"]
-                connectionFormat = data["connection.format"]
+                connectionFormat = data["format"]
                 vault = data["vault_credentials"]
                 s3Bucket = data["s3.bucket"]
                 s3Endpoint = data["s3.endpoint"]

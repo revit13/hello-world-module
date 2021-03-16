@@ -1,4 +1,3 @@
-  
 apiVersion: app.m4d.ibm.com/v1alpha1
 kind: M4DModule
 metadata:
@@ -19,7 +18,7 @@ spec:
     - flow: copy
       source:
         protocol: s3
-        dataformat: parquet
+        dataformat: csv
       sink:
         protocol: s3
         dataformat: csv

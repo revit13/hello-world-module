@@ -60,7 +60,7 @@ make helm-uninstall
 1. In `hello-world-module.yaml`:
     * Change `spec.chart.name` to your preferred chart image.
     * Define `flows` and `capabilities` for your module. 
-    The Mesh for Data manager checks the status indicators provided to see if the module is ready. If the Kubernetes job completes, the status will be `succeeded` so the manager will set the module as ready. 
+    * The Mesh for Data manager checks the `statusIndicators` provided to see if the module is ready. In this example, if the Kubernetes job completes, the status will be `succeeded` and the manager will set the module as ready. 
 
 2. Deploy `M4DModule` in `m4d-system` namespace:
 ```bash

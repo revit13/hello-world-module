@@ -56,16 +56,20 @@ make helm-chart-push
 make helm-uninstall
 ```
 
-## Deploy M4D application which triggers module (WIP)
+## Deploy M4D application which triggers module
 1. In `hello-world-module.yaml`:
     * Change `spec.chart.name` to your preferred chart image.
     * Define `flows` and `capabilities` for your module. 
+    The Mesh for Data manager checks the status indicators provided to see if the module is ready. If the Kubernetes job completes, the status will be `succeeded` so the manager will set the module as ready. 
 
 2. Deploy `M4DModule` in `m4d-system` namespace:
 ```bash
 kubectl create -f hello-world-module.yaml -n m4d-system
 ```
-3. In `m4dapplication.yaml`:
+3. Follow steps 3 and 4 in [this example](https://ibm.github.io/the-mesh-for-data/docs/usage/notebook-sample/) to register the data asset in the catalog and set the `ASSET_ID` environment variable
+4. Follow step 5 in [this example](https://ibm.github.io/the-mesh-for-data/docs/usage/notebook-sample/) to register HMAC credentials in Vault
+
+5. In `m4dapplication.yaml`:
     * Change `metadata.name` to your application name.
     * Define `appInfo.purpose`, `appInfo.role`, and `spec.data`
     * This ensures that a copy is triggered:
@@ -73,17 +77,20 @@ kubectl create -f hello-world-module.yaml -n m4d-system
     copy:
       required:true
     ```
-4.  Deploy `M4DApplication` in `default` namespace:
+6.  Deploy `M4DApplication` in `default` namespace:
 ```bash
-kubectl create -f m4dapplication.yaml -n default
+cat m4dapplication.yaml | sed "s/ASSET_ID/$ASSET_ID/g" | kubectl -n default apply -f -
 ```
-5.  Check if `M4DApplication` successfully deployed:
+7.  Check if `M4DApplication` successfully deployed:
 ```bash
+kubectl get m4dapplication -n default
 kubectl describe M4DApplication hello-world-module-test -n default
 ```
 
-6.  Check if module was triggered in `m4d-blueprints`:
+8.  Check if module was triggered in `m4d-blueprints`:
 ```bash
+kubectl get blueprint -n m4d-blueprints
+kubectl describe blueprint hello-world-module-test-default -n m4d-blueprints
 kubectl get job -n m4d-blueprints
 kubectl get pods -n m4d-blueprints
 ```

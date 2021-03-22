@@ -30,10 +30,10 @@ make docker-push
 ```
 
 ### Configure the chart
-
-- Settings can configured by editing the `values.yaml` directly.
+- When testing the chart, configure settings by editing the `values.yaml` directly.
 - Modify repository in `values.yaml` to your preferred Docker image. 
-- Modify copy/read action as needed with appropriate values. 
+- Modify copy/read action as needed with appropriate values.
+- At runtime, the `m4d-manager` will pass in the copy/read values to the module so you can leave them blank in your final chart. 
 
 ### Login to Helm registry
 ```bash

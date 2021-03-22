@@ -56,8 +56,8 @@ make helm-chart-push
 make helm-uninstall
 ```
 
-## Deploy M4D application which triggers module
-1. In `hello-world-module.yaml`:
+## Deploy M4D module
+1. In your module yaml spec (`hello-world-module.yaml`):
     * Change `spec.chart.name` to your preferred chart image.
     * Define `flows` and `capabilities` for your module. 
     * The Mesh for Data manager checks the `statusIndicators` provided to see if the module is ready. In this example, if the Kubernetes job completes, the status will be `succeeded` and the manager will set the module as ready. 
@@ -66,9 +66,11 @@ make helm-uninstall
 ```bash
 kubectl create -f hello-world-module.yaml -n m4d-system
 ```
+## Register data asset in Egeria and S3 bucket credentials in Vault (optional)
 3. Follow steps 3 and 4 in [this example](https://ibm.github.io/the-mesh-for-data/docs/usage/notebook-sample/) to register the data asset in the catalog and set the `ASSET_ID` environment variable
 4. Follow step 5 in [this example](https://ibm.github.io/the-mesh-for-data/docs/usage/notebook-sample/) to register HMAC credentials in Vault
 
+## Deploy M4D application which triggers module
 5. In `m4dapplication.yaml`:
     * Change `metadata.name` to your application name.
     * Define `appInfo.purpose`, `appInfo.role`, and `spec.data`

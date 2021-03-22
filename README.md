@@ -67,11 +67,11 @@ make helm-uninstall
 kubectl create -f hello-world-module.yaml -n m4d-system
 ```
 ## Register data asset in Egeria and S3 bucket credentials in Vault (optional)
-3. Follow steps 3 and 4 in [this example](https://ibm.github.io/the-mesh-for-data/docs/usage/notebook-sample/) to register the data asset in the catalog and set the `ASSET_ID` environment variable
-4. Follow step 5 in [this example](https://ibm.github.io/the-mesh-for-data/docs/usage/notebook-sample/) to register HMAC credentials in Vault
+1. Follow steps 3 and 4 in [this example](https://ibm.github.io/the-mesh-for-data/docs/usage/notebook-sample/) to register the data asset in the catalog and set the `ASSET_ID` environment variable
+2. Follow step 5 in [this example](https://ibm.github.io/the-mesh-for-data/docs/usage/notebook-sample/) to register HMAC credentials in Vault
 
 ## Deploy M4D application which triggers module
-5. In `m4dapplication.yaml`:
+1. In `m4dapplication.yaml`:
     * Change `metadata.name` to your application name.
     * Define `appInfo.purpose`, `appInfo.role`, and `spec.data`
     * This ensures that a copy is triggered:
@@ -79,17 +79,17 @@ kubectl create -f hello-world-module.yaml -n m4d-system
     copy:
       required:true
     ```
-6.  Deploy `M4DApplication` in `default` namespace:
+2.  Deploy `M4DApplication` in `default` namespace:
 ```bash
 cat m4dapplication.yaml | sed "s/ASSET_ID/$ASSET_ID/g" | kubectl -n default apply -f -
 ```
-7.  Check if `M4DApplication` successfully deployed:
+3.  Check if `M4DApplication` successfully deployed:
 ```bash
 kubectl get m4dapplication -n default
 kubectl describe M4DApplication hello-world-module-test -n default
 ```
 
-8.  Check if module was triggered in `m4d-blueprints`:
+4.  Check if module was triggered in `m4d-blueprints`:
 ```bash
 kubectl get blueprint -n m4d-blueprints
 kubectl describe blueprint hello-world-module-test-default -n m4d-blueprints

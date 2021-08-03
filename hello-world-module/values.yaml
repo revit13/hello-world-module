@@ -7,7 +7,7 @@ global:
 
 ## Module job image
 image: 
-  repository: ghcr.io/mesh-for-data/hello-world-module 
+  repository: ghcr.io/fybrik/hello-world-module 
   tag: latest
   pullPolicy: IfNotPresent
 
@@ -20,13 +20,13 @@ copy:
     connection:
         name: #s3
         s3: 
-          bucket: #m4d-test-bucket
+          bucket: #fybrik-test-bucket
           endpoint: #s3.eu-gb.cloud-object-storage.appdomain.cloud
           object_key: #car.data.parq
         type: #2
       # Vault Holds details for retrieving credentials by the modules from Vault store.
     vault:
-      # Address is Vault address e.g. http://vault.m4d-system:8200
+      # Address is Vault address e.g. http://vault.fybrik-system:8200
       address:
       # AuthPath is the path to auth method used to login to Vault e.g. /v1/auth/kubernetes/login
       authPath:
@@ -41,12 +41,12 @@ copy:
     connection:
         name: #s3
         s3:
-          bucket: #m4d-test-bucket
+          bucket: #fybrik-test-bucket
           endpoint: #s3.eu-gb.cloud-object-storage.appdomain.cloud
           object_key: #car.data.parq
         type: #2
     vault:
-      address: #http://vault.m4d-system:8200
+      address: #http://vault.fybrik-system:8200
       authPath: #/v1/auth/authpath/login
       role: #module
       secretPath: #/v1/kubernetes-secrets/secret-name?namespace=default

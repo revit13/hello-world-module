@@ -6,22 +6,21 @@ metadata:
     name: hello-world-module
     version: 0.0.1  # semantic version
 spec:
+  type: service
   chart:
     name: ghcr.io/fybrik/hello-world-module-chart:latest
     values:
       image.tag: latest
-  flows:
-    - copy
   capabilities:
-    credentials-managed-by: secret-provider
-    supportedInterfaces:
-    - flow: copy
-      source:
-        protocol: s3
-        dataformat: csv
-      sink:
-        protocol: s3
-        dataformat: csv
+    - capability: copy
+      scope: workload
+      supportedInterfaces:
+      - source:
+          protocol: s3
+          dataformat: csv
+        sink:
+          protocol: s3
+          dataformat: csv
   statusIndicators:
     - errorMessage: status.error
       failureCondition: status.failed > 0

@@ -10,14 +10,14 @@ The configuration for the chart is in the values file.
 ## Prerequisites
 
 - Kubernetes cluster 1.10+
-- Helm 3.0.0+
+- Helm 3.7+
 
 ## Installation
 
 ### Modify values in Makefile
 
 In `Makefile`:
-- Change `DOCKER_USERNAME`, `DOCKER_PASSWORD`, `DOCKER_HOSTNAME`, `DOCKER_NAMESPACE`, `DOCKER_TAGNAME`, `DOCKER_IMG_NAME`, and `DOCKER_CHART_IMG_NAME` to your own preferences.
+- Change `DOCKER_USERNAME`, `DOCKER_PASSWORD`, `DOCKER_HOSTNAME`, `DOCKER_NAMESPACE`, `DOCKER_TAGNAME`, `DOCKER_NAME` to your own preferences.
 
 ### Build Docker image for Python application
 ```bash

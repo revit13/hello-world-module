@@ -56,32 +56,68 @@ make helm-chart-push
 make helm-uninstall
 ```
 
-## Deploy Fybrik module
-1. In your module yaml spec (`hello-world-module.yaml`):
-    * Change `spec.chart.name` to your preferred chart image.
-    * Define `flows` and `capabilities` for your module. 
-    * The Fybrik manager checks the `statusIndicators` provided to see if the module is ready. In this example, if the Kubernetes job completes, the status will be `succeeded` and the manager will set the module as ready. 
+## Deploy and test Fybrik module
 
-2. Deploy `FybrikModule` in `fybrik-system` namespace:
+Follow this section to deploy and test the module on a single cluster.
+
+### Before you begin
+
+Install Fybrik using the [Quick Start](https://fybrik.io/v0.5/get-started/quickstart/) guide. This sample assumes the use of the built-in catalog, Open Policy Agent (OPA) and flight module.
+
+### Deploy DataShim
+
+Deploy [datashim](https://github.com/datashim-io/datashim) on the cluster:
+
+```bash
+   kubectl apply --validate=false -f https://raw.githubusercontent.com/datashim-io/datashim/master/release-tools/manifests/dlf.yaml
+   kubectl wait --for=condition=ready pod -n dlf --all --timeout=120s
+```
+
+### Deploy Fybrik module
+
+Deploy `FybrikModule` in `fybrik-system` namespace:
 ```bash
 kubectl create -f hello-world-module.yaml -n fybrik-system
 ```
-## Register data asset in Egeria and S3 bucket credentials in Vault (optional)
-1. Follow steps 3 and 4 in [this example](https://fybrik.io/dev/samples/notebook/) to register the data asset in the catalog and set the `ASSET_ID` environment variable
-2. Follow step 5 in [this example](https://fybrik.io/dev/samples/notebook/) to register HMAC credentials in Vault
+### Test using Fybrik Notebook sample
 
-## Deploy Fybrik application which triggers module
-1. In `fybrikapplication.yaml`:
-    * Change `metadata.name` to your application name.
-    * Define `appInfo.purpose`, `appInfo.role`, and `spec.data`
-    * This ensures that a copy is triggered:
-    ```yaml
-    copy:
-      required:true
-    ```
-2.  Deploy `FybrikApplication` in `default` namespace:
+Execute all the sections in [Fybrik Notebook sample](https://fybrik.io/v0.5/samples/notebook/) until `Deploy a Jupyter notebook` section.
+
+1. Deploy the following `FybrikStorageAccount` and a secret resources. These resources are used by the Fybrik to allocate a new bucket for the copied resource.
+
 ```bash
-cat fybrikapplication.yaml | sed "s/ASSET_ID/$ASSET_ID/g" | kubectl -n default apply -f -
+cat << EOF | kubectl apply -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: bucket-creds
+  namespace: fybrik-system
+type: Opaque
+stringData:
+  access_key: "${ACCESS_KEY}"
+  accessKeyID: "${ACCESS_KEY}"
+  secret_key: "${SECRET_KEY}"
+  secretAccessKey: "${SECRET_KEY}"
+EOF
+```
+```bash
+cat << EOF | kubectl apply -f -
+apiVersion:   app.fybrik.io/v1alpha1
+kind:         FybrikStorageAccount
+metadata:
+  name: storage-account
+  namespace: fybrik-system
+spec:
+  endpoint:  "http://localstack.fybrik-notebook-sample.svc.cluster.local:4566"
+  regions:
+    - theshire
+  secretRef:  bucket-creds
+EOF
+```
+## Deploy Fybrik application which triggers module
+Deploy `FybrikApplication` in `default` namespace:
+```bash
+kubectl apply -f fybrikapplication.yaml -n default
 ```
 3.  Check if `FybrikApplication` successfully deployed:
 ```bash
@@ -118,5 +154,4 @@ S3 endpoint is s3.eu-gb.cloud-object-storage.appdomain.cloud
 
 COPY SUCCEEDED
 ```
-
 

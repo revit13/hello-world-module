@@ -35,6 +35,25 @@ make docker-push
 - Modify copy/read action as needed with appropriate values.
 - At runtime, the `fybrik-manager` will pass in the copy/read values to the module so you can leave them blank in your final chart. 
 
+## Register as a Fybrik module
+
+To register HWM as a Fybrik module apply `hello-world-module.yaml` to the fybrik-system namespace of your cluster.
+
+To install the latest release run:
+
+```bash
+kubectl apply -f https://github.com/fybrik/hello-world-module/releases/latest/download/hello-world-module.yaml -n fybrik-system
+```
+
+### Version compatbility matrix
+
+| Fybrik           | HWM     | Command
+| ---              | ---     | ---
+| 0.5.x            | 0.5.x   | `https://github.com/fybrik/hello-world-module/releases/download/v0.5.0/hello-world-module.yaml`
+| master           | main    | `https://raw.githubusercontent.com/fybrik/hello-world-module/main/hello-world-module.yaml`
+
+
+
 ### Login to Helm registry
 ```bash
 make helm-login
@@ -81,7 +100,7 @@ kubectl create -f hello-world-module.yaml -n fybrik-system
 ```
 ### Test using Fybrik Notebook sample
 
-Execute all the sections in [Fybrik Notebook sample](https://fybrik.io/v0.5/samples/notebook/) until `Deploy a Jupyter notebook` section.
+1. Execute all the sections in [Fybrik Notebook sample](https://fybrik.io/v0.5/samples/notebook/) until `Deploy a Jupyter notebook` section.
 
 1. Deploy the following `FybrikStorageAccount` and a secret resources. These resources are used by the Fybrik to allocate a new bucket for the copied resource.
 
@@ -114,7 +133,7 @@ spec:
   secretRef:  bucket-creds
 EOF
 ```
-## Deploy Fybrik application which triggers module
+### Deploy Fybrik application which triggers module
 Deploy `FybrikApplication` in `default` namespace:
 ```bash
 kubectl apply -f fybrikapplication.yaml -n default

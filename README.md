@@ -49,7 +49,7 @@ kubectl apply -f https://github.com/fybrik/hello-world-module/releases/latest/do
 
 | Fybrik           | HWM     | Command
 | ---              | ---     | ---
-| 0.5.x            | 0.1.x   | `https://github.com/fybrik/hello-world-module/releases/download/v0.1.0/hello-world-module.yaml`
+| 0.5.x            | 0.5.x   | `https://github.com/fybrik/hello-world-module/releases/download/v0.5.0/hello-world-module.yaml`
 | master           | main    | `https://raw.githubusercontent.com/fybrik/hello-world-module/main/hello-world-module.yaml`
 
 

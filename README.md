@@ -81,7 +81,7 @@ Follow this section to deploy and test the module on a single cluster.
 
 ### Before you begin
 
-Install Fybrik using the [Quick Start](https://fybrik.io/v0.5/get-started/quickstart/) guide. This sample assumes the use of the built-in catalog, Open Policy Agent (OPA) and flight module.
+Install Fybrik using the [Quick Start](https://fybrik.io/v0.5/get-started/quickstart/) guide. Please follow `version compatbility matrix` section above for deploying the correct version of Fybrik. This sample assumes the use of the built-in catalog, Open Policy Agent (OPA) and flight module.
 
 ### Deploy DataShim
 
@@ -157,19 +157,19 @@ $ kubectl logs rel1-hello-world-module-x2tgs
 
 Hello World Module!
 
-Connection name is s3
+Connection name is paysim-csv
 
-Connection format is parquet
+Connection format is csv
 
-Vault credential address is http://vault.fybrik-system:8200/
+Vault credential address is http://vault.fybrik-system:8200
 
 Vault credential role is module
 
-Vault credential secret path is v1/fybrik/dataset-creds/%7B%22asset_id%22:%20%225067b64a-67bc-4067-9117-0aff0a9963ea%22%2C%20%22catalog_id%22:%20%220fd6ff25-7327-4b55-8ff2-56cc1c934824%22%7D
+Vault credential secret path is /v1/kubernetes-secrets/paysim-csv?namespace=fybrik-notebook-sample
 
-S3 bucket is fybrik-test-bucket
+S3 bucket is demo
 
-S3 endpoint is s3.eu-gb.cloud-object-storage.appdomain.cloud
+S3 endpoint is http://localstack.fybrik-notebook-sample.svc.cluster.local:4566
 
 COPY SUCCEEDED
 ```

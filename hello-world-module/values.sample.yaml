@@ -15,7 +15,6 @@ imagePullSecrets: []
 
 # Action (copy/read)
 copy:
-- assetID: "test1"
   # Copy source
   source:
     connection:
@@ -26,7 +25,8 @@ copy:
         object_key: car.data.parq
       type: 2
       # Vault Holds details for retrieving credentials by the modules from Vault store.
-      vault:
+    vault:
+      read:
         # Address is Vault address e.g. http://vault.fybrik-system:8200
         address: http://vault.fybrik-system:8200
         # AuthPath is the path to auth method used to login to Vault e.g. /v1/auth/kubernetes/login
@@ -35,7 +35,7 @@ copy:
         role: module                                                                  
         # SecretPath is the path of the secret holding the Credentials in Vault e.g. /v1/kubernetes-secrets/secret-name?namespace=default
         secretPath: /v1/kubernetes-secrets/secret-name?namespace=default
-      format: parquet
+    format: parquet
 
   # Copy destination
   destination:
@@ -46,12 +46,13 @@ copy:
         endpoint: s3.eu-gb.cloud-object-storage.appdomain.cloud
         object_key: car.data.parq
       type: 2
-      vault:
+    vault:
+      write:
         address: http://vault.fybrik-system:8200
         authPath: /v1/auth/authpath/login
         role: module
         secretPath: /v1/kubernetes-secrets/secret-name?namespace=default
-      format: csv
+    format: csv
 
 nameOverride: ""
 fullnameOverride: ""

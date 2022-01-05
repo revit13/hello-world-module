@@ -39,7 +39,6 @@ jobs:
            version="$releaseVersion-rc"
            echo "HELM_TAG=$releaseVersion-rc" >> $GITHUB_ENV
         else
-        then
            version="${GITHUB_REF#refs/tags/v}"
            echo "HELM_TAG=${version}" >> $GITHUB_ENV
         fi

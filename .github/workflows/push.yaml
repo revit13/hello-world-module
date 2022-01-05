@@ -27,20 +27,18 @@ jobs:
     - id: version
       name: Infer version
       run: |
+        version="${GITHUB_REF#refs/tags/v}"
+        echo "HELM_TAG=${version}" >> $GITHUB_ENV
         if  [[ $version == refs/* ]] ;
         then
             branch="${GITHUB_REF#refs/heads/}"
             version=$branch
-            # helm 3.7 chart tag must be semver
             echo "HELM_TAG=0.0.0-${version}" >> $GITHUB_ENV
         elif [[ $version == releases/* ]] ;
         then
            releaseVersion="${GITHUB_REF#refs/heads/releases/}"
            version="$releaseVersion-rc"
            echo "HELM_TAG=$releaseVersion-rc" >> $GITHUB_ENV
-        else
-           version="${GITHUB_REF#refs/tags/v}"
-           echo "HELM_TAG=${version}" >> $GITHUB_ENV
         fi
         echo "DOCKER_TAGNAME=$version" >> $GITHUB_ENV
     - name: Helm tool installer

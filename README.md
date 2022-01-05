@@ -1,5 +1,5 @@
 # Hello World Module
-## A Helm Chart for an example Fybrik module
+## A Helm Chart for an example Fybrik modulewww
 
 ## Introduction
 

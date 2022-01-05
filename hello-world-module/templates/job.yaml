@@ -33,13 +33,13 @@ spec:
 {{ toYaml . | indent 10 }}
         {{- end }}
         volumeMounts:
-        - name: {{ template "hello-world-module-volume.fullname" . }}-volume
+        - name: {{ template "hello-world-module.namewithsuffix" . }}-volume
           mountPath: "/hello-world-module"
           readOnly: true
       volumes:
-      - name: {{ template "hello-world-module-volume.fullname" . }}-volume
+      - name: {{ template "hello-world-module.namewithsuffix" . }}-volume
         configMap:
-          name: {{ template "hello-world-module-config.fullname" . }}-config
+          name: {{ template "hello-world-module.namewithsuffix" . }}-config
           items:
           - key: conf.yaml
             path: conf.yaml

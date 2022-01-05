@@ -100,7 +100,7 @@ kubectl create -f hello-world-module.yaml -n fybrik-system
 ```
 ### Test using Fybrik Notebook sample
 
-1. Execute all the sections in [Fybrik Notebook sample](https://fybrik.io/v0.5/samples/notebook/) until `Deploy a Jupyter notebook` section.
+1. Execute all the sections in [Fybrik Notebook sample](https://fybrik.io/v0.5/samples/notebook/) until `Define data access policies` section (excluded).
 
 1. Deploy the following `FybrikStorageAccount` and a secret resources. These resources are used by the Fybrik to allocate a new bucket for the copied resource.
 
@@ -132,6 +132,27 @@ spec:
     - theshire
   secretRef:  bucket-creds
 EOF
+```
+
+### Define data access policies
+
+  Define the following [OpenPolicyAgent](https://www.openpolicyagent.org/) policy to allow the write operation:
+
+```bash
+package dataapi.authz
+
+rule[{}] {
+  input.action.actionType == "write"
+  true
+}
+```
+
+  In this sample only the policy above is applied. Copy the policy to a file named sample-policy.rego and then run:
+
+```bash
+kubectl -n fybrik-system create configmap sample-policy --from-file=sample-policy.rego
+kubectl -n fybrik-system label configmap sample-policy openpolicyagent.org/policy=rego
+while [[ $(kubectl get cm sample-policy -n fybrik-system -o 'jsonpath={.metadata.annotations.openpolicyagent\.org/policy-status}') != '{"status":"ok"}' ]]; do echo "waiting for policy to be applied" && sleep 5; done
 ```
 ### Deploy Fybrik application which triggers module
 Deploy `FybrikApplication` in `default` namespace:

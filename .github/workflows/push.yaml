@@ -49,7 +49,7 @@ jobs:
       run: make docker-build
     - name: Docker push
       run: |
-        echo "${{ secrets.GITHUB_TOKEN }}" | docker login -u "${{ env.DOCKER_USERNAME }}" --password-stdin "${{ env.DOCKER_HOSTNAME }}"
+#        echo "${{ secrets.PAT }}" | docker login -u "${{ env.DOCKER_USERNAME }}" --password-stdin "${{ env.DOCKER_HOSTNAME }}"
         make docker-push
     - run: docker images
     - name: Install yq

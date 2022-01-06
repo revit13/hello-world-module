@@ -7,7 +7,7 @@ spec:
    workloadSelector:
      matchLabels: {}
   appInfo:
-    intent: fraud-detection
+    intent: Fraud Detection
   data:
     - dataSetID: "fybrik-notebook-sample/paysim-csv"
       requirements: 

@@ -10,14 +10,14 @@ The configuration for the chart is in the values file.
 ## Prerequisites
 
 - Kubernetes cluster 1.10+
-- Helm 3.0.0+
+- Helm 3.7.x
 
 ## Installation
 
 ### Modify values in Makefile
 
 In `Makefile`:
-- Change `DOCKER_USERNAME`, `DOCKER_PASSWORD`, `DOCKER_HOSTNAME`, `DOCKER_NAMESPACE`, `DOCKER_TAGNAME`, `DOCKER_IMG_NAME`, and `DOCKER_CHART_IMG_NAME` to your own preferences.
+- Change `DOCKER_USERNAME`, `DOCKER_PASSWORD`, `DOCKER_HOSTNAME`, `DOCKER_NAMESPACE`, `DOCKER_TAGNAME`, `DOCKER_NAME`, `HELM_TAG` to your own preferences.
 
 ### Build Docker image for Python application
 ```bash
@@ -81,9 +81,10 @@ Follow this section to deploy and test the module on a single cluster.
 
 ### Before you begin
 
-Install Fybrik using the [Quick Start](https://fybrik.io/v0.5/get-started/quickstart/) guide. This sample assumes the use of the built-in catalog, Open Policy Agent (OPA) and flight module.
+Install Fybrik using the [Quick Start](https://fybrik.io/dev/get-started/quickstart/) guide. This sample assumes the use of the built-in catalog, Open Policy Agent (OPA) and flight module.
 
-> ***Notice: Please follow `version compatbility matrix` section above for deploying the correct version of Fybrik and this module.*** 
+> ***Notice: Please follow `version compatbility matrix` section above for deploying the correct version of Fybrik and this module. 
+For deploying older versions of hello-world-module please refer to the `README.md` file in the relevant release. For older version of Fybrik please follow the instructions in Fybrik site which match the release.***
 
 ### Deploy DataShim
 
@@ -102,7 +103,7 @@ kubectl create -f hello-world-module.yaml -n fybrik-system
 ```
 ### Test using Fybrik Notebook sample
 
-1. Execute all the sections in [Fybrik Notebook sample](https://fybrik.io/v0.5/samples/notebook/) until `Define data access policies` section (excluded).
+1. Execute all the sections in [Fybrik Notebook sample](https://fybrik.io/dev/samples/notebook/) until `Define data access policies` section (excluded).
 
 1. Deploy the following `FybrikStorageAccount` and a secret resources. These resources are used by the Fybrik to allocate a new bucket for the copied resource.
 
@@ -129,9 +130,9 @@ metadata:
   name: storage-account
   namespace: fybrik-system
 spec:
-  endpoint:  "http://localstack.fybrik-notebook-sample.svc.cluster.local:4566"
-  regions:
-    - theshire
+  id: theshire
+  endpoints:
+    theshire: "http://localstack.fybrik-notebook-sample.svc.cluster.local:4566"
   secretRef:  bucket-creds
 EOF
 ```

@@ -1,7 +1,7 @@
 apiVersion: app.fybrik.io/v1alpha1
 kind: FybrikApplication
 metadata:
-  name: hello-world-module-test
+  name: my-notebook
 spec:
   selector:
    workloadSelector:
@@ -12,7 +12,6 @@ spec:
     - dataSetID: "fybrik-notebook-sample/paysim-csv"
       requirements: 
         copy:
-          catalog: {}
           required: true
         interface:
           dataformat: csv

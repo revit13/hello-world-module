@@ -37,7 +37,7 @@ make docker-push
 
 ## Register as a Fybrik module
 
-To register HWM as a Fybrik module apply `hello-world-module.yaml` to the fybrik-system namespace of your cluster.
+To register HWM (Hello World Module) as a Fybrik module apply `hello-world-module.yaml` to the fybrik-system namespace of your cluster.
 
 To install the latest release run:
 
@@ -81,7 +81,9 @@ Follow this section to deploy and test the module on a single cluster.
 
 ### Before you begin
 
-Install Fybrik using the [Quick Start](https://fybrik.io/v0.5/get-started/quickstart/) guide. Please follow `version compatbility matrix` section above for deploying the correct version of Fybrik. This sample assumes the use of the built-in catalog, Open Policy Agent (OPA) and flight module.
+Install Fybrik using the [Quick Start](https://fybrik.io/v0.5/get-started/quickstart/) guide. This sample assumes the use of the built-in catalog, Open Policy Agent (OPA) and flight module.
+
+> ***Notice: Please follow `version compatbility matrix` section above for deploying the correct version of Fybrik and this module.*** 
 
 ### Deploy DataShim
 
@@ -141,6 +143,7 @@ EOF
 ```bash
 package dataapi.authz
 
+description := "allow the write operation"
 rule[{}] {
   input.action.actionType == "write"
   true
@@ -159,22 +162,21 @@ Deploy `FybrikApplication` in `default` namespace:
 ```bash
 kubectl apply -f fybrikapplication.yaml -n default
 ```
-3.  Check if `FybrikApplication` successfully deployed:
+3.  Run the following command to wait until the `status` of the `FybrikApplication` is `ready`:
 ```bash
-kubectl get FybrikApplication -n default
-kubectl describe FybrikApplication hello-world-module-test -n default
+while [[ $(kubectl get fybrikapplication my-notebook -n default -o 'jsonpath={.status.ready}') != "true" ]]; do echo "waiting for FybrikApplication" && sleep 5; done
 ```
 
 4.  Check if module was triggered in `fybrik-blueprints`:
 ```bash
 kubectl get blueprint -n fybrik-blueprints
-kubectl describe blueprint hello-world-module-test-default -n fybrik-blueprints
+kubectl describe blueprint my-notebook-default -n fybrik-blueprints
 kubectl get job -n fybrik-blueprints
 kubectl get pods -n fybrik-blueprints
 ```
 If you are using the `hello-world-module` image, you should see this in the `kubectl logs` of your completed Pod:
 ```
-$ kubectl logs rel1-hello-world-module-x2tgs
+$ kubectl logs my-notebook-default-copy-hello-world-module-chart-xxxx -n fybrik-blueprints
 
 Hello World Module!
 

@@ -37,7 +37,7 @@ make docker-push
 
 ## Register as a Fybrik module
 
-To register HWM(Hello World Module) as a Fybrik module apply `hello-world-module.yaml` to the fybrik-system namespace of your cluster.
+To register HWM (Hello World Module) as a Fybrik module apply `hello-world-module.yaml` to the fybrik-system namespace of your cluster.
 
 To install the latest release run:
 
@@ -162,7 +162,7 @@ Deploy `FybrikApplication` in `default` namespace:
 ```bash
 kubectl apply -f fybrikapplication.yaml -n default
 ```
-3.  Run the following command to wait until the `FybrikApplication` is ready:
+3.  Run the following command to wait until the `status` of the `FybrikApplication` is `ready`:
 ```bash
 while [[ $(kubectl get fybrikapplication my-notebook -n default -o 'jsonpath={.status.ready}') != "true" ]]; do echo "waiting for FybrikApplication" && sleep 5; done
 ```

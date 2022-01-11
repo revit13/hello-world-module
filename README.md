@@ -198,3 +198,17 @@ S3 endpoint is http://localstack.fybrik-notebook-sample.svc.cluster.local:4566
 COPY SUCCEEDED
 ```
 
+## Clean
+
+Run the following command to delete the fybrik application:
+```bash
+kubectl delete FybrikApplication my-notebook -n default
+```
+
+Run the following command to delete the fybrik module:
+```bash
+kubectl delete fybrikmodule hello-world-module -n fybrik-system
+```
+
+Please execute the `Cleanup` section from [Fybrik notebook sample](https://fybrik.io/dev/samples/notebook/)
+

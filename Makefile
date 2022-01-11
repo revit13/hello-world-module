@@ -1,17 +1,16 @@
 include Makefile.env
 
-export DOCKER_USERNAME ?= eletonia
+export DOCKER_USERNAME ?= fybrik
 export DOCKER_PASSWORD ?= 
 export DOCKER_HOSTNAME ?= ghcr.io
 export DOCKER_NAMESPACE ?= fybrik
 export DOCKER_TAGNAME ?= 0.0.0
-export DOCKER_IMG_NAME := hello-world-module
 
 DOCKER_FILE ?= Dockerfile
 DOCKER_CONTEXT ?= .
 DOCKER_NAME ?= hello-world-module
 
-APP_IMG ?= ${DOCKER_HOSTNAME}/${DOCKER_NAMESPACE}/${DOCKER_IMG_NAME}:${DOCKER_TAGNAME}
+APP_IMG ?= ${DOCKER_HOSTNAME}/${DOCKER_NAMESPACE}/${DOCKER_NAME}:${DOCKER_TAGNAME}
 
 .PHONY: docker-all
 docker-all: docker-build docker-push

@@ -10,14 +10,14 @@ The configuration for the chart is in the values file.
 ## Prerequisites
 
 - Kubernetes cluster 1.10+
-- Helm 3.0.0+
+- Helm 3.7.x
 
 ## Installation
 
 ### Modify values in Makefile
 
 In `Makefile`:
-- Change `DOCKER_USERNAME`, `DOCKER_PASSWORD`, `DOCKER_HOSTNAME`, `DOCKER_NAMESPACE`, `DOCKER_TAGNAME`, `DOCKER_IMG_NAME`, and `DOCKER_CHART_IMG_NAME` to your own preferences.
+- Change `DOCKER_USERNAME`, `DOCKER_PASSWORD`, `DOCKER_HOSTNAME`, `DOCKER_NAMESPACE`, `DOCKER_TAGNAME`, `DOCKER_NAME`, `HELM_TAG` to your own preferences.
 
 ### Build Docker image for Python application
 ```bash
@@ -50,6 +50,7 @@ kubectl apply -f https://github.com/fybrik/hello-world-module/releases/latest/do
 | Fybrik           | HWM     | Command
 | ---              | ---     | ---
 | 0.5.x            | 0.5.x   | `https://github.com/fybrik/hello-world-module/releases/download/v0.5.0/hello-world-module.yaml`
+| 0.6.x            | 0.6.x   | `https://github.com/fybrik/hello-world-module/releases/download/v0.6.0/hello-world-module.yaml`
 | master           | main    | `https://raw.githubusercontent.com/fybrik/hello-world-module/main/hello-world-module.yaml`
 
 
@@ -81,9 +82,10 @@ Follow this section to deploy and test the module on a single cluster.
 
 ### Before you begin
 
-Install Fybrik using the [Quick Start](https://fybrik.io/v0.5/get-started/quickstart/) guide. This sample assumes the use of the built-in catalog, Open Policy Agent (OPA) and flight module.
+Install Fybrik using the [Quick Start](https://fybrik.io/dev/get-started/quickstart/) guide. This sample assumes the use of the built-in catalog, Open Policy Agent (OPA) and flight module.
 
-> ***Notice: Please follow `version compatbility matrix` section above for deploying the correct version of Fybrik and this module.*** 
+> ***Notice: Please follow `version compatbility matrix` section above for deploying the correct version of Fybrik and this module. 
+For deploying older versions of hello-world-module please refer to the `README.md` file in the relevant release. For older version of Fybrik please follow the instructions in Fybrik site which match the release.***
 
 ### Deploy DataShim
 
@@ -102,7 +104,7 @@ kubectl create -f hello-world-module.yaml -n fybrik-system
 ```
 ### Test using Fybrik Notebook sample
 
-1. Execute all the sections in [Fybrik Notebook sample](https://fybrik.io/v0.5/samples/notebook/) until `Define data access policies` section (excluded).
+1. Execute all the sections in [Fybrik Notebook sample](https://fybrik.io/dev/samples/notebook/) until `Define data access policies` section (excluded).
 
 1. Deploy the following `FybrikStorageAccount` and a secret resources. These resources are used by the Fybrik to allocate a new bucket for the copied resource.
 
@@ -129,9 +131,9 @@ metadata:
   name: storage-account
   namespace: fybrik-system
 spec:
-  endpoint:  "http://localstack.fybrik-notebook-sample.svc.cluster.local:4566"
-  regions:
-    - theshire
+  id: theshire
+  endpoints:
+    theshire: "http://localstack.fybrik-notebook-sample.svc.cluster.local:4566"
   secretRef:  bucket-creds
 EOF
 ```
@@ -196,4 +198,18 @@ S3 endpoint is http://localstack.fybrik-notebook-sample.svc.cluster.local:4566
 
 COPY SUCCEEDED
 ```
+
+## Clean
+
+Run the following command to delete the fybrik application:
+```bash
+kubectl delete FybrikApplication my-notebook -n default
+```
+
+Run the following command to delete the fybrik module:
+```bash
+kubectl delete fybrikmodule hello-world-module -n fybrik-system
+```
+
+Please execute the `Cleanup` section from [Fybrik notebook sample](https://fybrik.io/dev/samples/notebook/)
 

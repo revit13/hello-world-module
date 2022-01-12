@@ -23,7 +23,6 @@ copy:
         bucket: fybrik-test-bucket
         endpoint: s3.eu-gb.cloud-object-storage.appdomain.cloud
         object_key: car.data.parq
-      type: 2
       # Vault Holds details for retrieving credentials by the modules from Vault store.
     vault:
       read:
@@ -45,7 +44,6 @@ copy:
         bucket: fybrik-test-bucket
         endpoint: s3.eu-gb.cloud-object-storage.appdomain.cloud
         object_key: car.data.parq
-      type: 2
     vault:
       write:
         address: http://vault.fybrik-system:8200

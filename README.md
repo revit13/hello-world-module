@@ -89,12 +89,7 @@ For deploying older versions of hello-world-module please refer to the `README.m
 
 ### Deploy DataShim
 
-Deploy [datashim](https://github.com/datashim-io/datashim) on the cluster:
-
-```bash
-   kubectl apply --validate=false -f https://raw.githubusercontent.com/datashim-io/datashim/master/release-tools/manifests/dlf.yaml
-   kubectl wait --for=condition=ready pod -n dlf --all --timeout=120s
-```
+Deploy [datashim](https://github.com/datashim-io/datashim) on the cluster. For deployment options based on your environment please refer to the [datashim site](https://github.com/datashim-io/datashim#quickstart).
 
 ### Deploy Fybrik module
 

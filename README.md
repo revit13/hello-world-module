@@ -10,7 +10,7 @@ The configuration for the chart is in the values file.
 ## Prerequisites
 
 - Kubernetes cluster 1.10+
-- Helm 3.7.x
+- Helm 3.7.x and above
 
 ## Installation
 

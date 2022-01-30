@@ -44,13 +44,23 @@ helm repo add fybrik-charts https://fybrik.github.io/charts
 helm repo update
 
 # make -C third_party/cert-manager deploy
-
+# https://cert-manager.io/docs/installation/supported-releases/
+if [ $kubernetesVersion == "kind22" ]
+then
+helm install cert-manager jetstack/cert-manager \
+    --namespace cert-manager \
+    --version v1.6.0 \
+    --create-namespace \
+    --set installCRDs=true \
+    --wait --timeout 220s
+else
 helm install cert-manager jetstack/cert-manager \
     --namespace cert-manager \
     --version v1.2.0 \
     --create-namespace \
     --set installCRDs=true \
     --wait --timeout 220s
+fi
 
 # if [ $2 == "dev" ]
 # then

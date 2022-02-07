@@ -96,9 +96,20 @@ kubectl apply -f ../../third_party/datashim/dlf.yaml
 kubectl wait --for=condition=ready pods -l app.kubernetes.io/name=dlf -n dlf --timeout=500s
 
 
-sleep 10
-# kubectl apply -f hello-world-module.yaml -n fybrik-system
-kubectl apply -f https://github.com/fybrik/hello-world-module/releases/download/v$moduleVersion/hello-world-module.yaml -n fybrik-system
+# Related to https://github.com/cert-manager/cert-manager/issues/2908
+# Fybrik webhook not really ready after "helm install --wait"
+# temporary workaround is to loop until the module is applied as expected
+CMD="bin/kubectl apply -f https://github.com/fybrik/hello-world-module/releases/download/v$moduleVersion/hello-world-module.yaml -n fybrik-system"
+count=0
+until $CMD
+do
+  if [[ $count -eq 10 ]]
+  then
+    break
+  fi
+  sleep 1
+  ((count=count+1))
+done
 
 
 # Notebook sample

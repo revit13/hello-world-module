@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright 2020 IBM Corp.
+# SPDX-License-Identifier: Apache-2.0
+
 
 set -x
 set -e
@@ -46,72 +49,60 @@ fi
 #quick start
 
 
-helm repo add jetstack https://charts.jetstack.io
-helm repo add hashicorp https://helm.releases.hashicorp.com
-helm repo add fybrik-charts https://fybrik.github.io/charts
-helm repo update
+bin/helm repo add jetstack https://charts.jetstack.io
+bin/helm repo add hashicorp https://helm.releases.hashicorp.com
+bin/helm repo add fybrik-charts https://fybrik.github.io/charts
+bin/helm repo update
 
-# make -C third_party/cert-manager deploy
-
-helm install cert-manager jetstack/cert-manager \
+bin/helm install cert-manager jetstack/cert-manager \
     --namespace cert-manager \
     --version v$certManagerVersion \
     --create-namespace \
     --set installCRDs=true \
     --wait --timeout 220s
 
-# if [ $2 == "dev" ]
-# then
-#     cd ${PATH_TO_LOCAL_FYBRIK}
-#     helm dependency update charts/vault
-#     helm install vault charts/vault --create-namespace -n fybrik-system \
-#         --set "vault.injector.enabled=false" \
-#         --set "vault.server.dev.enabled=true" \
-#         --values charts/vault/env/dev/vault-single-cluster-values.yaml
-#     kubectl wait --for=condition=ready --all pod -n fybrik-system --timeout=120s
-
-# else
-    helm install vault fybrik-charts/vault --create-namespace -n fybrik-system \
-        --set "vault.injector.enabled=false" \
-        --set "vault.server.dev.enabled=true" \
-        --values https://raw.githubusercontent.com/fybrik/fybrik/v0.5.3/charts/vault/env/dev/vault-single-cluster-values.yaml
-    kubectl wait --for=condition=ready --all pod -n fybrik-system --timeout=220s
-# fi
+bin/helm install vault fybrik-charts/vault --create-namespace -n fybrik-system \
+    --set "vault.injector.enabled=false" \
+    --set "vault.server.dev.enabled=true" \
+   --values https://raw.githubusercontent.com/fybrik/fybrik/v0.5.3/charts/vault/env/dev/vault-single-cluster-values.yaml
+bin/kubectl wait --for=condition=ready --all pod -n fybrik-system --timeout=220s
 
 
 
-helm install fybrik-crd fybrik-charts/fybrik-crd -n fybrik-system --version v$fybrikVersion --wait
-helm install fybrik fybrik-charts/fybrik -n fybrik-system --version v$fybrikVersion --wait
+bin/helm install fybrik-crd fybrik-charts/fybrik-crd -n fybrik-system --version v$fybrikVersion --wait
+bin/helm install fybrik fybrik-charts/fybrik -n fybrik-system --version v$fybrikVersion --wait
 
+# Related to https://github.com/cert-manager/cert-manager/issues/2908
+# Fybrik webhook not really ready after "helm install --wait"
+# A workaround is to loop until the module is applied as expected
+CMD="bin/kubectl apply -f https://github.com/fybrik/hello-world-module/releases/download/v$moduleVersion/hello-world-module.yaml -n fybrik-system"
+count=0
+until $CMD
+do
+  if [[ $count -eq 10 ]]
+  then
+    break
+  fi
+  sleep 1
+  ((count=count+1))
+done
 
-# cd ${PATH_TO_LOCAL_FYBRIK}
-# helm install fybrik-crd charts/fybrik-crd -n fybrik-system --wait
-# helm install fybrik charts/fybrik --set global.tag=master --set global.imagePullPolicy=Always -n fybrik-system --wait
-
-
-# hello-world-module
 
 #datashim
-kubectl apply -f ../../third_party/datashim/dlf.yaml
-kubectl wait --for=condition=ready pods -l app.kubernetes.io/name=dlf -n dlf --timeout=500s
-
-
-sleep 10
-# kubectl apply -f hello-world-module.yaml -n fybrik-system
-kubectl apply -f https://github.com/fybrik/hello-world-module/releases/download/v$moduleVersion/hello-world-module.yaml -n fybrik-system
-
+bin/kubectl apply -f ../../third_party/datashim/dlf.yaml
+bin/kubectl wait --for=condition=ready pods -l app.kubernetes.io/name=dlf -n dlf --timeout=500s
 
 # Notebook sample
 
-kubectl create namespace fybrik-notebook-sample
-kubectl config set-context --current --namespace=fybrik-notebook-sample
+bin/kubectl create namespace fybrik-notebook-sample
+bin/kubectl config set-context --current --namespace=fybrik-notebook-sample
 
 #localstack
-helm repo add localstack-charts https://localstack.github.io/helm-charts
-helm install localstack localstack-charts/localstack --set startServices="s3" --set service.type=ClusterIP
-kubectl wait --for=condition=ready --all pod -n fybrik-notebook-sample --timeout=400s
+bin/helm repo add localstack-charts https://localstack.github.io/helm-charts
+bin/helm install localstack localstack-charts/localstack --set startServices="s3" --set service.type=ClusterIP
+bin/kubectl wait --for=condition=ready --all pod -n fybrik-notebook-sample --timeout=400s
 
-kubectl port-forward svc/localstack 4566:4566 &
+bin/kubectl port-forward svc/localstack 4566:4566 &
 
 export ENDPOINT="http://127.0.0.1:4566"
 export BUCKET="demo"
@@ -120,7 +111,7 @@ export FILEPATH="$WORKING_DIR/PS_20174392719_1491204439457_log.csv"
 aws configure set aws_access_key_id ${ACCESS_KEY} && aws configure set aws_secret_access_key ${SECRET_KEY} && aws --endpoint-url=${ENDPOINT} s3api create-bucket --bucket ${BUCKET} && aws --endpoint-url=${ENDPOINT} s3api put-object --bucket ${BUCKET} --key ${OBJECT_KEY} --body ${FILEPATH}
 
 
-cat << EOF | kubectl apply -f -
+cat << EOF | bin/kubectl apply -f -
 apiVersion: v1
 kind: Secret
 metadata:
@@ -132,11 +123,11 @@ stringData:
 EOF
 
 
-kubectl apply -f $WORKING_DIR/Asset-$moduleResourceVersion.yaml -n fybrik-notebook-sample
+bin/kubectl apply -f $WORKING_DIR/Asset-$moduleResourceVersion.yaml -n fybrik-notebook-sample
 
 
 #fybrikstorage
-cat << EOF | kubectl apply -f -
+cat << EOF | bin/kubectl apply -f -
 apiVersion: v1
 kind: Secret
 metadata:
@@ -150,16 +141,13 @@ stringData:
   secretAccessKey: "${SECRET_KEY}"
 EOF
 
-kubectl apply -f $WORKING_DIR/fybrikStorage-$moduleResourceVersion.yaml -n fybrik-system
+bin/kubectl apply -f $WORKING_DIR/fybrikStorage-$moduleResourceVersion.yaml -n fybrik-system
 
-
-
-
-kubectl -n fybrik-system create configmap sample-policy --from-file=$WORKING_DIR/sample-policy-$moduleResourceVersion.rego
-kubectl -n fybrik-system label configmap sample-policy openpolicyagent.org/policy=rego
+bin/kubectl -n fybrik-system create configmap sample-policy --from-file=$WORKING_DIR/sample-policy-$moduleResourceVersion.rego
+bin/kubectl -n fybrik-system label configmap sample-policy openpolicyagent.org/policy=rego
 
 c=0
-while [[ $(kubectl get cm sample-policy -n fybrik-system -o 'jsonpath={.metadata.annotations.openpolicyagent\.org/policy-status}') != '{"status":"ok"}' ]]
+while [[ $(bin/kubectl get cm sample-policy -n fybrik-system -o 'jsonpath={.metadata.annotations.openpolicyagent\.org/policy-status}') != '{"status":"ok"}' ]]
 do
     echo "waiting"
     ((c++)) && ((c==25)) && break
@@ -167,10 +155,10 @@ do
 done
 
 
-kubectl apply -f https://raw.githubusercontent.com/fybrik/hello-world-module/releases/$moduleVersion/fybrikapplication.yaml -n default
+bin/kubectl apply -f https://raw.githubusercontent.com/fybrik/hello-world-module/releases/$moduleVersion/fybrikapplication.yaml -n default
 
 c=0
-while [[ $(kubectl get fybrikapplication my-notebook -n default -o 'jsonpath={.status.ready}') != "true" ]]
+while [[ $(bin/kubectl get fybrikapplication my-notebook -n default -o 'jsonpath={.status.ready}') != "true" ]]
 do
     echo "waiting"
     ((c++)) && ((c==30)) && break
@@ -178,11 +166,11 @@ do
 done
 
 
-kubectl get pods -n fybrik-blueprints
+bin/kubectl get pods -n fybrik-blueprints
 
-POD_NAME=$(kubectl get pods -n fybrik-blueprints -o=name | sed "s/^.\{4\}//")
+POD_NAME=$(bin/kubectl get pods -n fybrik-blueprints -o=name | sed "s/^.\{4\}//")
 
-kubectl logs ${POD_NAME} -n fybrik-blueprints > res.out
+bin/kubectl logs ${POD_NAME} -n fybrik-blueprints > res.out
 
 DIFF=$(diff $WORKING_DIR/expected-$moduleVersion.txt res.out)
 if [ "${DIFF}" == "" ]
@@ -191,8 +179,7 @@ then
 else
     echo "test failed"
 fi
-# diff $WORKING_DIR/expected.txt res.out
 
 pkill kubectl
-kubectl delete namespace fybrik-notebook-sample
-kubectl -n fybrik-system delete configmap sample-policy
+bin/kubectl delete namespace fybrik-notebook-sample
+bin/kubectl -n fybrik-system delete configmap sample-policy

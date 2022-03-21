@@ -1,18 +1,24 @@
 {{ if and (.Values.assets) (eq (len .Values.assets) 1) -}}
 data:
-{{- with (index .Values.assets 0) }}
-  - format: {{ .source.format | quote }}
+{{- with $asset := (index .Values.assets 0) }}
+{{- if and ($asset.args) (eq (len $asset.args) 2) -}}
+{{- with index $asset.args 0 }}
+  - format: {{ .format | quote }}
+    {{ if .vault.read }}
     vault_credentials:
-      address: {{ .source.vault.read.address | quote}}
-      authPath: {{ .source.vault.read.authPath | quote}}
-      role: {{ .source.vault.read.role }}
-      secretPath: {{ .source.vault.read.secretPath | quote}}
-    {{- $connection := .source.connection | default dict -}}
+      address: {{ .vault.read.address | quote}}
+      authPath: {{ .vault.read.authPath | quote}}
+      role: {{ .vault.read.role }}
+      secretPath: {{ .vault.read.secretPath | quote}}
+     {{ end }}
+    {{- $connection := .connection | default dict -}}
     {{ if $connection.s3 | quote}}
     s3.bucket: {{ $connection.s3.bucket | quote}}
     s3.endpoint: {{ $connection.s3.endpoint | quote}}
     {{ end }}
     connection.name: {{ $connection.name | quote }}
+{{ end }}
+{{ end }}
 {{ end }}
 {{ else }}
 data: []

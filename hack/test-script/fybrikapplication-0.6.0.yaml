@@ -2,6 +2,7 @@ apiVersion: app.fybrik.io/v1alpha1
 kind: FybrikApplication
 metadata:
   name: my-notebook
+  namespace: default
 spec:
   selector:
    workloadSelector:
@@ -10,7 +11,7 @@ spec:
     intent: "Fraud Detection"
   data:
     - dataSetID: "fybrik-notebook-sample/paysim-csv"
-      requirements: 
+      requirements:
         copy:
           required: true
         interface:

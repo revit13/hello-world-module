@@ -156,7 +156,7 @@ do
 done
 
 
-${TOOLBIN}/kubectl apply -f https://raw.githubusercontent.com/fybrik/hello-world-module/releases/$moduleVersion/fybrikapplication.yaml -n default
+${TOOLBIN}/kubectl apply -f $WORKING_DIR/fybrikapplication-$moduleVersion.yaml -n default
 
 c=0
 while [[ $(${TOOLBIN}/kubectl get fybrikapplication my-notebook -n default -o 'jsonpath={.status.ready}') != "true" ]]

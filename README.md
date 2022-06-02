@@ -101,7 +101,7 @@ kubectl create -f hello-world-module.yaml -n fybrik-system
 
 1. Execute all the sections in [Fybrik Notebook sample](https://fybrik.io/dev/samples/notebook/) until `Define data access policies` section (excluded).
 
-1. Deploy the following `FybrikStorageAccount` and a secret resources. These resources are used by the Fybrik to allocate a new bucket for the copied resource.
+1. Deploy the follwing secret resource and `FybrikStorageAccount` resource from `hack/test-module` directory. Note that the module version should match the latter version. These resources are used by the Fybrik to allocate a new bucket for the copied resource.
 
 ```bash
 cat << EOF | kubectl apply -f -
@@ -116,20 +116,6 @@ stringData:
   accessKeyID: "${ACCESS_KEY}"
   secret_key: "${SECRET_KEY}"
   secretAccessKey: "${SECRET_KEY}"
-EOF
-```
-```bash
-cat << EOF | kubectl apply -f -
-apiVersion:   app.fybrik.io/v1alpha1
-kind:         FybrikStorageAccount
-metadata:
-  name: storage-account
-  namespace: fybrik-system
-spec:
-  id: theshire
-  endpoints:
-    theshire: "http://localstack.fybrik-notebook-sample.svc.cluster.local:4566"
-  secretRef:  bucket-creds
 EOF
 ```
 
@@ -155,10 +141,8 @@ kubectl -n fybrik-system label configmap sample-policy openpolicyagent.org/polic
 while [[ $(kubectl get cm sample-policy -n fybrik-system -o 'jsonpath={.metadata.annotations.openpolicyagent\.org/policy-status}') != '{"status":"ok"}' ]]; do echo "waiting for policy to be applied" && sleep 5; done
 ```
 ### Deploy Fybrik application which triggers module
-Deploy `FybrikApplication` in `default` namespace:
-```bash
-kubectl apply -f fybrikapplication.yaml -n default
-```
+Deploy `FybrikApplication` in `default` namespace. the resource should be taken from `hack/test-module` directory. Note that the module version should match the fybrikapplication version.
+
 3.  Run the following command to wait until the `status` of the `FybrikApplication` is `ready`:
 ```bash
 while [[ $(kubectl get fybrikapplication my-notebook -n default -o 'jsonpath={.status.ready}') != "true" ]]; do echo "waiting for FybrikApplication" && sleep 5; done

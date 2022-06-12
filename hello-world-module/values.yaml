@@ -8,7 +8,7 @@ global:
 image:
   repository: ghcr.io/fybrik/hello-world-module
   tag: main
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 imagePullSecrets: []
 # Action (copy/read)
 assets:
@@ -62,13 +62,25 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 annotations: {}
-securityContext: {}
-# capabilities:
-#   drop:
-#   - ALL
-# readOnlyRootFilesystem: true
-# runAsNonRoot: true
-# runAsUser: 1000
+
+# Pod Security Context.
+# ref: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context
+podSecurityContext:
+  runAsNonRoot: true
+  # Ignored on openshift.
+  runAsUser: 10001
+  # Ignored on openshift.
+  seccompProfile:
+    type: RuntimeDefault
+# Container Security Context.
+# ref: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1
+containerSecurityContext:
+  readOnlyRootFilesystem: true
+  privileged: false
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
 
 resources: {}
 # We usually recommend not to specify default resources and to leave this as a conscious

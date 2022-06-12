@@ -12,11 +12,13 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "hello-world-module.serviceAccountName" . }}
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- include "fybrik.processPodSecurityContext" (dict "context" . "podSecurityContext" .Values.podSecurityContext) | nindent 8 }}
       containers:
       - image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-        imagePullPolicy: {{ .Values.image.imagePullPolicy }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         name: {{ template "hello-world-module.fullname" . }}
+        securityContext:
+        {{toYaml .Values.containerSecurityContext | nindent 10 }}
         env:
         {{- range concat (.Values.global.environment) (.Values.environment | default list)}}
         - name: {{ .name | quote}}
